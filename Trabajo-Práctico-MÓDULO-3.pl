@@ -82,4 +82,3 @@ bfs( [ [State, Path] | RestQueue ], Visited, FinalPlan) :-
 % Auxiliar para extraer solo los estados de los nodos generados
 extract_states([], []).
 extract_states([[S, _]|T], [S|T2]) :- extract_states(T, T2).
-
