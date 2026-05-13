@@ -1,5 +1,3 @@
-% Define la dimensión N de la habitación (por ejemplo, 5x5)
-dimension(5).
 % ESTADO INICIAL (Caso 1)
 % state(pos(0,0), on-floor, pos(2,2), pos(1,1), hasnot)
 
@@ -31,6 +29,11 @@ move(state(pos(X,Y), on-box, pos(X,Y), pos(X,Y), hasnot), grasp,
 move(state(pos(X,Y), on-floor, pos(X,Y), PosB, Has), climb, 
      state(pos(X,Y), on-box, pos(X,Y), PosB, Has)).
 
+% ACCIÓN 2.5: Bajar de la caja (get_down)
+% Requisito: El mono está sobre la caja y baja al suelo.
+move(state(pos(X,Y), on-box, pos(X,Y), PosB, Has), get_down, 
+     state(pos(X,Y), on-floor, pos(X,Y), PosB, Has)).
+
 % ACCIÓN 3: Empujar la caja (push)
 % Requisito: Mono en el suelo y en la misma posición que la caja. Ambos se mueven juntos[cite: 14].
 move(state(pos(X,Y), on-floor, pos(X,Y), PosB, Has), push(Dir), 
@@ -54,12 +57,19 @@ member(X, [X|_]).
 member(X, [_|Tail]) :- member(X, Tail).
 
 % Predicado principal para resolver encontrando el camino más corto
-% CASO 1: Mono en (0,0), Caja en (2,2), Plátano en (1,1)[cite: 31, 32].
+% CASO 1: Mono en (0,0), Caja en (2,2), Plátano en (1,1).
 solve(Plan) :-
     InitState = state(pos(0,0), on-floor, pos(2,2), pos(1,1), hasnot),
     % La cola (Queue) almacena [EstadoActual, [CaminoDeAccionesHastaAqui]]
     bfs( [ [InitState, []] ], [InitState], RevPlan ),
     reverse(RevPlan, Plan).
+
+% ==========================================
+% EJECUCIÓN Y FORMATO DE SALIDA (Para cumplir con el PDF)
+% ==========================================
+run :-
+    solve(Plan),
+    format('True, ~w.~n', [Plan]).
 
 % Caso Base BFS: El primer estado de la cola es el final (has). Hemos terminado[cite: 25].
 bfs( [ [state(_, _, _, _, has), Plan] | _ ], _, Plan).
