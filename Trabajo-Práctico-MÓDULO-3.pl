@@ -44,7 +44,7 @@ move(state(pos(X,Y), on-floor, PosC, PosB, Has), walk(Dir),
     valid_pos(NX, NY).
 
 % Utilidad estándar de listas
-member(X, [X|_]).
+member(X, [X|_]) :-!.
 member(X, [_|Tail]) :- member(X, Tail).
 
 % Predicado principal genérico (Recibe el estado inicial por parámetro)
@@ -59,7 +59,7 @@ run(InitState) :-
     format('True, ~w.~n', [Plan]).
 
 % Caso Base BFS
-bfs( [ [state(_, _, _, _, has), Plan] | _ ], _, Plan).
+bfs( [ [state(_, _, _, _, has), Plan] | _ ], _, Plan) :- !.
 
 % Caso Recursivo BFS 
 bfs( [ [State, Path] | RestQueue ], Visited, FinalPlan) :-
